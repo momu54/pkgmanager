@@ -5,6 +5,7 @@ const { setTimeout } = require('timers/promises');
 const { spawn } = require('child_process');
 const { join } = require('path');
 const { json: npm } = require('npm-registry-fetch');
+const { existsSync } = require('fs');
 
 /**
  * @type {{projects: {items: string[], lastproject: number | null}}}
@@ -19,6 +20,7 @@ GetConfig().then(async (confres) => {
 function main() {
 	ShowProjects();
 	CreateProjectButtonHandler();
+	CreateProjectHandler();
 }
 
 function ShowProjects() {
@@ -33,7 +35,8 @@ function ShowProjects() {
 		if (!projectslist || !projectselement) return;
 		projectslist.style.display = 'block';
 		const projectshtml = config.projects.items.map(
-			(item) => `<span class="project" data-path="${item}">${item}</span>`
+			(item) =>
+				`<span class="clickabletext project" data-path="${item}">${item}</span>`
 		);
 		if (projectshtml.length == 0) {
 			projectselement.innerHTML = `<span class="project gray">There are no projects.</span>`;
@@ -66,24 +69,56 @@ function CreateProjectHandler() {
 	const projects =
 		/** @type {HTMLDivElement} */
 		(document.getElementsByClassName('projects').item(0));
-	projects.addEventListener('click', () => {
-		const target =
-			/** @type {HTMLSpanElement} */
-			(projects.closest('.project'));
-		if (!target) return;
+	projects.addEventListener('click', (event) => {
+		if (!event.target) return;
+		OpenProject(
+			/** @type {string} */
+			(
+				/** @type {HTMLSpanElement} */
+				(event.target).dataset.path
+			)
+		);
 	});
 }
 
 /** @param {string} path */
 
 async function OpenProject(path) {
+	const projectlist =
+		/** @type {HTMLDivElement} */
+		(document.getElementsByClassName('projectslist').item(0));
+	const packagelist =
+		/** @type {HTMLDivElement} */
+		(document.getElementsByClassName('packagelist').item(0));
+	projectlist.style.display = 'none';
+	if (!existsSync(join(path, 'package.json'))) {
+		packagelist.style.display = 'block';
+		packagelist.innerHTML = `<span class="gray">No package.json.</span>`;
+	}
 	const rawpkgjson = await readFile(join(path, 'package.json'), { encoding: 'utf-8' });
 	/** @type {import('types-package-json').PackageJson} */
-	const pkgjson = JSON.parse(rawpkgjson);
+	let pkgjson;
+	try {
+		pkgjson = JSON.parse(rawpkgjson);
+	} catch (error) {
+		packagelist.style.display = 'block';
+		packagelist.innerHTML = `<span class="gray">package.json is'nt a json file.</span>`;
+		return;
+	}
 	if (
 		!pkgjson.dependencies &&
 		!pkgjson.devDependencies &&
 		!pkgjson.optionalDependencies
 	) {
+		packagelist.style.display = 'block';
+		packagelist.innerHTML = `<span class="gray">No dependencies.</span>`;
+	} else {
+		const alldependencies = {
+			...pkgjson.dependencies,
+			...pkgjson.devDependencies,
+			...pkgjson.optionalDependencies,
+		};
+		for (const npmpackage in alldependencies) {
+		}
 	}
 }
