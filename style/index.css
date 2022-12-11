@@ -2,6 +2,9 @@
 
 .zone {
 	display: none;
+	padding: 20px;
+	border: #ffffff solid 2px;
+	border-radius: 12px;
 }
 
 body {
@@ -15,12 +18,6 @@ body {
 * {
 	color: #ffffff;
 	font-family: 'Nunito', sans-serif;
-}
-
-.projectslist {
-	padding: 20px;
-	border: #ffffff solid 2px;
-	border-radius: 12px;
 }
 
 .addprojects {
@@ -38,15 +35,6 @@ body {
 	cursor: pointer;
 }
 
-.project {
-	transition: 0.2s;
-	cursor: pointer;
-}
-
-.project:hover {
-	color: #ffaa00;
-}
-
 .projects {
 	line-height: 2rem;
 }
@@ -56,6 +44,7 @@ h1 {
 }
 
 .gray {
+	transition: 0.2s;
 	cursor: not-allowed;
 	color: #ffffff;
 }
@@ -67,4 +56,13 @@ h1 {
 .emojibtn {
 	border: #00000000 solid 1px;
 	border-radius: 10px;
+}
+
+.clickabletext {
+	transition: 0.2s;
+	cursor: pointer;
+}
+
+.clickabletext:hover {
+	color: #ffaa00;
 }
