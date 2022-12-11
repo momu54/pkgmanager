@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+
+.zone {
+	display: none;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #000000;
+}
+
+* {
+	color: #ffffff;
+	font-family: 'Nunito', sans-serif;
+}
+
+.projectslist {
+	padding: 20px;
+	border: #ffffff solid 2px;
+	border-radius: 12px;
+}
+
+.addprojects {
+	border: #ffffff solid 2px;
+	border-radius: 8px;
+	padding: 8px;
+	background-color: #000000;
+	transition: 0.2s;
+}
+
+.addprojects:hover {
+	border-color: #000000;
+	background-color: #ffffff;
+	color: #000000;
+	cursor: pointer;
+}
+
+.project {
+	transition: 0.2s;
+	cursor: pointer;
+}
+
+.project:hover {
+	color: #ffaa00;
+}
+
+.projects {
+	line-height: 2rem;
+}
+
+h1 {
+	height: 20px;
+}
+
+.gray {
+	cursor: not-allowed;
+	color: #ffffff;
+}
+
+.gray:hover {
+	color: #606060;
+}
+
+.emojibtn {
+	border: #00000000 solid 1px;
+	border-radius: 10px;
+}
