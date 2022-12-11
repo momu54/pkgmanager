@@ -94,6 +94,7 @@ async function OpenProject(path) {
 	if (!existsSync(join(path, 'package.json'))) {
 		packagelist.style.display = 'block';
 		packagelist.innerHTML = `<span class="gray">No package.json.</span>`;
+		return;
 	}
 	const rawpkgjson = await readFile(join(path, 'package.json'), { encoding: 'utf-8' });
 	/** @type {import('types-package-json').PackageJson} */
