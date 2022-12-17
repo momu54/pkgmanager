@@ -84,7 +84,7 @@ h1 {
 
 .packages {
 	overflow-y: auto;
-	max-height: 800px;
+	max-height: 80vh;
 }
 
 .pkgver {

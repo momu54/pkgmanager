@@ -83,6 +83,27 @@ function CreateProjectHandler() {
 	});
 }
 
+function CreatePackageLinkHandler() {
+	const packages =
+		/** @type {HTMLDivElement} */
+		(document.getElementsByClassName('packages').item(0));
+	packages.addEventListener('click', (event) => {
+		if (!event.target) return;
+		const npmwindow = new BrowserWindow({
+			width: 1280,
+			height: 720,
+			autoHideMenuBar: true,
+		});
+		npmwindow.loadURL(
+			/** @type {string} */
+			(
+				/** @type {HTMLTitleElement} */
+				(event.target).dataset.url
+			)
+		);
+	});
+}
+
 /** @param {string} path */
 
 async function OpenProject(path) {
@@ -131,13 +152,15 @@ async function OpenProject(path) {
 		const processcodeblock =
 			/** @type {HTMLElement} */
 			(document.getElementsByClassName('processingcode').item(0));
-		processcodeblock.parentElement.parentElement.children.item(0).innerHTML =
-			'Fetching dependencies.';
+		const processtitle =
+			/** @type {HTMLTitleElement} */
+			(document.querySelector('.processing .title'));
+		processtitle.innerHTML = 'Fetching dependencies.';
 		for (const packagename in alldependencies) {
 			const pkgversion = alldependencies[packagename];
 			if (pkgversion.includes('://') || pkgversion.includes(' - ')) continue;
 			processcodeblock.innerHTML += `[info] fetching ${packagename}\n`;
-			const starttime = new Date();
+			const starttime = Date.now();
 			/** @type {import('./index.js').INpmPackage} */
 			const pkg =
 				/** @type {any} */
@@ -148,7 +171,7 @@ async function OpenProject(path) {
 					<span class="packagever">${pkgversion}</span><br><br>
 					<button class="packagedelete emojibtn basebtn">🗑️</button>
 				</div><hr size="2px" color="#202020"></hr>`;
-			const endtime = new Date();
+			const endtime = Date.now();
 			processcodeblock.innerHTML += `[info] fetched ${packagename} (${
 				endtime - starttime
 			} ms)\n`;
