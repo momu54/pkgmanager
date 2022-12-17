@@ -9,7 +9,7 @@
 		"dist": "electron-builder --x64"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "momu54",
 	"license": "AGPL-3.0-or-later",
 	"devDependencies": {
 		"electron": "^22.0.0",
@@ -23,20 +23,49 @@
 	"packageManager": "yarn@3.3.0",
 	"build": {
 		"appId": "com.momu54.pkgmanager",
+		"artifactName": "pkgmanager ${os} ${version} ${arch}.${ext}",
 		"mac": {
-			"category": "public.app-category.developer-tools"
+			"category": "public.app-category.developer-tools",
+			"target": "dmg"
 		},
 		"dmg": {
 			"title": "pkgmanager"
 		},
 		"win": {
-			"target": "nsis"
+			"target": [
+				{
+					"target": "nsis",
+					"arch": [
+						"x64"
+					]
+				},
+				{
+					"target": "zip",
+					"arch": [
+						"x64"
+					]
+				}
+			]
 		},
 		"nsis": {
 			"oneClick": false,
 			"perMachine": true,
 			"allowElevation": true,
 			"allowToChangeInstallationDirectory": true
+		},
+		"linux": {
+			"target": [
+				"deb",
+				"AppImage",
+				"rpm",
+				"tar.bz2"
+			],
+			"category": "Development",
+			"icon": "icon.png",
+			"desktop": {
+				"Type": "Application",
+				"Name": "pkgmanager"
+			}
 		}
 	}
 }
