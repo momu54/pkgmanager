@@ -1,6 +1,6 @@
 const { writeFile, readFile } = require('fs/promises');
 const { GetConfig } = require('./utility/index.js');
-const { dialog } = require('@electron/remote');
+const { dialog, BrowserWindow } = require('@electron/remote');
 const { setTimeout } = require('timers/promises');
 const { spawn } = require('child_process');
 const { join } = require('path');
@@ -15,7 +15,6 @@ GetConfig().then(async (confres) => {
 	config = confres;
 	console.log(config);
 	main();
-	await setTimeout(2000);
 });
 function main() {
 	ShowProjects();
@@ -35,11 +34,14 @@ function ShowProjects() {
 		if (!projectslist || !projectselement) return;
 		projectslist.style.display = 'block';
 		const projectshtml = config.projects.items.map(
-			(item) =>
-				`<span class="clickabletext project" data-path="${item}">${item}</span>`
+			(item) => /*html*/ `<span class="clickabletext project" data-path="${item}"
+					>${item}</span
+				>`
 		);
 		if (projectshtml.length == 0) {
-			projectselement.innerHTML = `<span class="project gray">There are no projects.</span>`;
+			projectselement.innerHTML = /*html*/ `
+			<span class="project gray">There are no projects.</span
+			>`;
 			return;
 		}
 		console.log(projectshtml.join('<br>'));
@@ -93,7 +95,7 @@ async function OpenProject(path) {
 	projectlist.style.display = 'none';
 	if (!existsSync(join(path, 'package.json'))) {
 		packagelist.style.display = 'block';
-		packagelist.innerHTML = `<span class="gray">No package.json.</span>`;
+		packagelist.innerHTML = /*html*/ `<span class="gray">No package.json.</span>`;
 		return;
 	}
 	const rawpkgjson = await readFile(join(path, 'package.json'), { encoding: 'utf-8' });
@@ -103,7 +105,9 @@ async function OpenProject(path) {
 		pkgjson = JSON.parse(rawpkgjson);
 	} catch (error) {
 		packagelist.style.display = 'block';
-		packagelist.innerHTML = `<span class="gray">package.json is'nt a json file.</span>`;
+		packagelist.innerHTML = /*html*/ `<span class="gray"
+			>package.json isn't a json file.</span
+		>`;
 		return;
 	}
 	if (
@@ -112,14 +116,48 @@ async function OpenProject(path) {
 		!pkgjson.optionalDependencies
 	) {
 		packagelist.style.display = 'block';
-		packagelist.innerHTML = `<span class="gray">No dependencies.</span>`;
+		packagelist.innerHTML = /*html*/ `<span class="gray">No dependencies.</span>`;
 	} else {
 		const alldependencies = {
 			...pkgjson.dependencies,
 			...pkgjson.devDependencies,
 			...pkgjson.optionalDependencies,
 		};
-		for (const npmpackage in alldependencies) {
+		let pkghtml = '';
+		const processzone =
+			/** @type {HTMLDivElement} */
+			(document.getElementsByClassName('processing').item(0));
+		processzone.style.display = 'block';
+		const processcodeblock =
+			/** @type {HTMLElement} */
+			(document.getElementsByClassName('processingcode').item(0));
+		processcodeblock.parentElement.parentElement.children.item(0).innerHTML =
+			'Fetching dependencies.';
+		for (const packagename in alldependencies) {
+			const pkgversion = alldependencies[packagename];
+			if (pkgversion.includes('://') || pkgversion.includes(' - ')) continue;
+			processcodeblock.innerHTML += `[info] fetching ${packagename}\n`;
+			const starttime = new Date();
+			/** @type {import('./index.js').INpmPackage} */
+			const pkg =
+				/** @type {any} */
+				(await npm(`/${packagename}`));
+			pkghtml += /*html*/ `<div class="package">
+					<h3 data-url="https://www.npmjs.org/package/${pkg.name}" class="packagename clickabletext">${pkg.name}</h3>
+					<span class="packagedesc">${pkg.description}<span><br><br>
+					<span class="packagever">${pkgversion}</span><br><br>
+					<button class="packagedelete emojibtn basebtn">🗑️</button>
+				</div><hr size="2px" color="#202020"></hr>`;
+			const endtime = new Date();
+			processcodeblock.innerHTML += `[info] fetched ${packagename} (${
+				endtime - starttime
+			} ms)\n`;
 		}
+		processzone.style.display = 'none';
+		packagelist.style.display = 'block';
+		const packageshtml =
+			/** @type {HTMLDivElement} */
+			(document.getElementsByClassName('packages').item(0));
+		packageshtml.innerHTML = pkghtml;
 	}
 }

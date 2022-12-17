@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
 
 .zone {
 	display: none;
@@ -13,6 +14,7 @@ body {
 	align-items: center;
 	height: 100vh;
 	background-color: #000000;
+	overflow-y: hidden;
 }
 
 * {
@@ -20,7 +22,20 @@ body {
 	font-family: 'Nunito', sans-serif;
 }
 
-.addprojects {
+*::-webkit-scrollbar {
+	width: 4px;
+	height: 8px;
+	display: block;
+	background-color: #00000000;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #ffffff;
+	border: 0px solid #000000;
+	border-radius: 2px;
+}
+
+.basebtn {
 	border: #ffffff solid 2px;
 	border-radius: 8px;
 	padding: 8px;
@@ -28,7 +43,7 @@ body {
 	transition: 0.2s;
 }
 
-.addprojects:hover {
+.basebtn:hover {
 	border-color: #000000;
 	background-color: #ffffff;
 	color: #000000;
@@ -54,15 +69,44 @@ h1 {
 }
 
 .emojibtn {
-	border: #00000000 solid 1px;
-	border-radius: 10px;
+	border-radius: 20px;
 }
 
 .clickabletext {
 	transition: 0.2s;
 	cursor: pointer;
+	text-decoration: none;
 }
 
 .clickabletext:hover {
 	color: #ffaa00;
+}
+
+.packages {
+	overflow-y: auto;
+	max-height: 800px;
+}
+
+.pkgver {
+	color: #b0b0b0;
+}
+
+.processingcode {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: small;
+}
+
+.processinglog {
+	background-color: #202020;
+	border: #00000000 solid 1px;
+	border-radius: 12px;
+	overflow-y: scroll;
+	max-height: 200px;
+	width: 800px;
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+.package {
+	line-height: 20px;
 }
