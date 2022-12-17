@@ -84,7 +84,7 @@ h1 {
 
 .packages {
 	overflow-y: auto;
-	max-height: 80vh;
+	max-height: 60vh;
 }
 
 .pkgver {
@@ -101,8 +101,8 @@ h1 {
 	border: #00000000 solid 1px;
 	border-radius: 12px;
 	overflow-y: scroll;
-	max-height: 200px;
-	width: 800px;
+	max-height: 150px;
+	width: 75vh;
 	display: flex;
 	flex-direction: column-reverse;
 }

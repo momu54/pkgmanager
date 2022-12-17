@@ -1,20 +1,42 @@
 {
 	"name": "pkgmanager",
 	"version": "1.0.0",
-	"description": "",
+	"description": "A node package manager.",
 	"main": "app.js",
 	"scripts": {
-		"start": "electron --trace-warnings ."
+		"start": "electron --trace-warnings .",
+		"pack": "electron-builder --dir --x64",
+		"dist": "electron-builder --x64"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "AGPL-3.0-or-later",
 	"devDependencies": {
 		"electron": "^22.0.0",
+		"electron-builder": "^23.6.0",
 		"types-package-json": "^2.0.39"
 	},
 	"dependencies": {
 		"@electron/remote": "^2.0.9",
 		"npm-registry-fetch": "^14.0.3"
+	},
+	"packageManager": "yarn@3.3.0",
+	"build": {
+		"appId": "com.momu54.pkgmanager",
+		"mac": {
+			"category": "public.app-category.developer-tools"
+		},
+		"dmg": {
+			"title": "pkgmanager"
+		},
+		"win": {
+			"target": "nsis"
+		},
+		"nsis": {
+			"oneClick": false,
+			"perMachine": true,
+			"allowElevation": true,
+			"allowToChangeInstallationDirectory": true
+		}
 	}
 }

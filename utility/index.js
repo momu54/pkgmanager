@@ -1,9 +1,24 @@
 const { existsSync } = require('fs');
-const { writeFile, readFile } = require('fs/promises');
+const { writeFile, readFile, mkdir } = require('fs/promises');
 
 module.exports.GetConfig = async function GetConfig() {
-	// check config file exists
-	const configexists = existsSync('./config/projects.json') && true;
+	/** @type {string} */
+	let configpath = '';
+	switch (process.platform) {
+		case 'win32':
+			configpath = `${process.env.APPDATA}/pkgmanager/`;
+			break;
+		case 'darwin':
+			configpath = `${process.env.HOME}/Library/Application Support/pkgmanager/`;
+			break;
+		case 'linux':
+			configpath = `${process.env.HOME}/.config/pkgmanager/`;
+			break;
+		default:
+			break;
+	}
+	if (!existsSync(configpath)) await mkdir(configpath);
+	const configexists = existsSync(`${configpath}/projects.json`) && true;
 	/**
 	 * @type {{items: string[], lastproject: number | null}}
 	 */
@@ -13,18 +28,19 @@ module.exports.GetConfig = async function GetConfig() {
 	};
 	if (!configexists) {
 		await writeFile(
-			'./config/projects.json',
+			`${configpath}/projects.json`,
 			JSON.stringify({
 				items: [],
 				lastproject: null,
 			})
 		);
 	} else {
-		const rawproject = await readFile('./config/projects.json');
+		const rawproject = await readFile(`${configpath}/projects.json`);
 		projects = JSON.parse(rawproject.toString());
 	}
 
 	return {
 		projects,
+		configpath,
 	};
 };

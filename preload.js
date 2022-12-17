@@ -1,30 +1,28 @@
 const { writeFile, readFile } = require('fs/promises');
 const { GetConfig } = require('./utility/index.js');
 const { dialog, BrowserWindow } = require('@electron/remote');
-const { setTimeout } = require('timers/promises');
 const { spawn } = require('child_process');
 const { join } = require('path');
 const { json: npm } = require('npm-registry-fetch');
 const { existsSync } = require('fs');
 
 /**
- * @type {{projects: {items: string[], lastproject: number | null}}}
+ * @type {{projects: {items: string[], lastproject: number | null}, configpath: string}}
  */
 let config;
 GetConfig().then(async (confres) => {
 	config = confres;
-	console.log(config);
 	main();
 });
 function main() {
 	ShowProjects();
 	CreateProjectButtonHandler();
 	CreateProjectHandler();
+	CreatePackageLinkHandler();
 }
 
 function ShowProjects() {
 	if (!config.projects.lastproject) {
-		console.log(config);
 		const projectslist =
 			/** @type {HTMLDivElement} */
 			(document.getElementsByClassName('projectslist').item(0));
@@ -44,7 +42,6 @@ function ShowProjects() {
 			>`;
 			return;
 		}
-		console.log(projectshtml.join('<br>'));
 		projectselement.innerHTML = projectshtml.join('<br>');
 	}
 }
@@ -61,8 +58,10 @@ function CreateProjectButtonHandler() {
 		if (projects.filePaths.length == 0) return;
 		const newprojects = [...config.projects.items, ...projects.filePaths];
 		config.projects.items = newprojects;
-		await writeFile('./config/projects.json', JSON.stringify(config.projects));
-		console.log(config);
+		await writeFile(
+			`${config.configpath}/projects.json`,
+			JSON.stringify(config.projects)
+		);
 		ShowProjects();
 	});
 }
@@ -89,6 +88,10 @@ function CreatePackageLinkHandler() {
 		(document.getElementsByClassName('packages').item(0));
 	packages.addEventListener('click', (event) => {
 		if (!event.target) return;
+		const target =
+			/** @type {HTMLTitleElement} */
+			(event.target);
+		if (!target.dataset.url) return;
 		const npmwindow = new BrowserWindow({
 			width: 1280,
 			height: 720,
@@ -96,10 +99,7 @@ function CreatePackageLinkHandler() {
 		});
 		npmwindow.loadURL(
 			/** @type {string} */
-			(
-				/** @type {HTMLTitleElement} */
-				(event.target).dataset.url
-			)
+			(target.dataset.url)
 		);
 	});
 }
