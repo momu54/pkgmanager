@@ -9,8 +9,7 @@
 		"dist": "electron-builder --x64"
 	},
 	"keywords": [],
-	"author": "momu54",
-	"email": "main@momu54.cf",
+	"author": "momu54 <main@momu54.cf>",
 	"license": "AGPL-3.0-or-later",
 	"devDependencies": {
 		"electron": "^22.0.0",
