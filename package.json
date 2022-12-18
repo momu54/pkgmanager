@@ -1,6 +1,6 @@
 {
 	"name": "pkgmanager",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A node package manager.",
 	"main": "app.js",
 	"scripts": {
