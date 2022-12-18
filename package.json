@@ -26,7 +26,13 @@
 		"artifactName": "pkgmanager ${os} ${version} ${arch}.${ext}",
 		"mac": {
 			"category": "public.app-category.developer-tools",
-			"target": "dmg"
+			"target": {
+				"target": "dmg",
+				"arch": [
+					"x64",
+					"arm64"
+				]
+			}
 		},
 		"dmg": {
 			"title": "pkgmanager"
@@ -36,13 +42,15 @@
 				{
 					"target": "nsis",
 					"arch": [
-						"x64"
+						"x64",
+						"arm64"
 					]
 				},
 				{
 					"target": "zip",
 					"arch": [
-						"x64"
+						"x64",
+						"arm64"
 					]
 				}
 			]
@@ -55,10 +63,34 @@
 		},
 		"linux": {
 			"target": [
-				"deb",
-				"AppImage",
-				"rpm",
-				"tar.bz2"
+				{
+					"target": "deb",
+					"arch": [
+						"x64",
+						"arm64"
+					]
+				},
+				{
+					"target": "AppImage",
+					"arch": [
+						"x64",
+						"arm64"
+					]
+				},
+				{
+					"target": "rpm",
+					"arch": [
+						"x64",
+						"arm64"
+					]
+				},
+				{
+					"target": "tar.bz2",
+					"arch": [
+						"x64",
+						"arm64"
+					]
+				}
 			],
 			"category": "Development",
 			"icon": "icon.png",
